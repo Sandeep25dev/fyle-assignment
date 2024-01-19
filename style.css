@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Roboto:wght@100;300;400;500;700&family=Ubuntu&family=Varela+Round&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: #3652ad;
+}
+.container {
+  /* max-width: 900px; */
+  margin: auto;
+  width: 80%;
+  padding: 20px;
+  background-color: #f8fae5;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.profile {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  background-color: #dcf2f1;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.profile h1 {
+  font-size: 25px;
+}
+
+.repo-link {
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.left-sec {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  max-width: 200px;
+}
+.detail-sec {
+  margin: 2px 16px;
+}
+.img-sec {
+  width: 150px;
+  height: 150px;
+  border: 1px solid black;
+  padding: 2px;
+  border-radius: 50%;
+}
+
+.img-sec > img {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+}
+.repos-section {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.repo-box {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  border: none;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.topics {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+.topic {
+  color: white;
+  background-color: rgb(85, 169, 203);
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  padding: 3px;
+}
