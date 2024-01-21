@@ -26,7 +26,7 @@ async function fetchData(username) {
     const data = await res.json();
     return data;
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 }
 
@@ -111,7 +111,6 @@ function getRepositories() {
           repositoriesContainer.appendChild(repositoryElement);
         });
 
-        // Display pagination
         displayPagination();
       });
     })
@@ -135,7 +134,6 @@ function displayPagination() {
   };
   paginationContainer.appendChild(prevButton);
 
-  // Display dynamic range of pages
   const startPage = Math.max(1, pagesCount.currentPage - 3);
   const endPage = Math.min(pagesCount.lastPage, pagesCount.currentPage + 3);
 
@@ -163,14 +161,11 @@ function displayPagination() {
   };
   paginationContainer.appendChild(nextButton);
 
-  // Disable Prev button on the first page
   prevButton.disabled = pagesCount.currentPage === 1;
 
-  // Disable Next button on the last page
   nextButton.disabled = pagesCount.currentPage === pagesCount.lastPage;
 }
 
-// Function to parse the Link header
 function parseLinkHeader(header) {
   const links = {};
   header.split(",").forEach((part) => {
