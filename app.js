@@ -60,7 +60,7 @@ userSearchSection.addEventListener("submit", async function (e) {
           : data.twitter_username
       }`;
     } else {
-      alert(`user name ${username.value} is not exist!`);
+      alert(`username ${username.value} does not exist!`);
     }
   } catch (err) {
     throw new Error(err);
