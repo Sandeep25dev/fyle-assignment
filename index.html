@@ -19,13 +19,17 @@
           id="username"
           placeholder="Enter github username"
         />
-        <button
-          class="search-btn username-search"
-          style="background-color: #b4d4ff; color: #3468c0"
-        >
-          Search
-        </button>
+        <input
+          type="number"
+          class="input"
+          value="10"
+          style="width: 20vw"
+          id="pageSize"
+          placeholder="Enter the per page size"
+        />
+        <button class="search-btn username-search">Search</button>
       </form>
+      <div id="loader2"></div>
       <div class="container disable">
         <div class="profile">
           <div class="left-sec">
@@ -49,17 +53,8 @@
             <p id="twitter"></p>
           </div>
         </div>
-        <form class="input-field">
-          <input
-            type="text"
-            class="input repo-input"
-            style="width: 20vw"
-            placeholder="Enter the repository name"
-          />
-          <button class="search-btn repo-search">Search</button>
-        </form>
 
-        <div id="loader">Loading...</div>
+        <div id="loader"></div>
         <div class="repos-section" id="repositories"></div>
       </div>
       <div id="pagination" class="pagination"></div>

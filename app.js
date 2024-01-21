@@ -1,6 +1,5 @@
 "use strict";
 
-const apiUrl = "https://api.github.com";
 const userSearchSection = document.querySelector(".user-search-section");
 const container = document.querySelector(".container");
 const profilePic = document.getElementById("profile-pic");
@@ -10,14 +9,20 @@ const bio = document.getElementById("bio");
 const userLocation = document.getElementById("location");
 const twitter = document.getElementById("twitter");
 const reposSection = document.querySelector(".repos-section");
-let currentPage = 1;
+const loader2 = document.getElementById("loader2");
+const apiUrl = "https://api.github.com";
 let repositoriesPerPage = 10;
 let lastPage = 1;
 
-async function fetchData() {
-  const username = document.getElementById("username").value;
+const pagesCount = {
+  repositoriesPerPage: 10,
+  lastPage: 1,
+  currentPage: 1,
+};
+
+async function fetchData(username) {
   try {
-    const res = await fetch(`http://api.github.com/users/${username}`);
+    const res = await fetch(`${apiUrl}/users/${username}`);
     const data = await res.json();
     return data;
   } catch (err) {
@@ -26,29 +31,38 @@ async function fetchData() {
 }
 
 userSearchSection.addEventListener("submit", async function (e) {
+  const pageSize = document.getElementById("pageSize").value;
+  pagesCount.repositoriesPerPage = pageSize;
+  pagesCount.lastPage = 1;
+  pagesCount.currentPage = 1;
+  const username = document.getElementById("username").value;
   e.preventDefault();
   try {
-    const data = await fetchData();
-    getRepositories();
-    console.log(data);
-    container.classList.remove("disable");
-    profilePic.src = data.avatar_url;
-    repoLink.href = data.html_url;
-    repoLink.innerHTML = `<span>
-      <i class="fa-solid fa-link"></i>
-    </span>
-    ${data.html_url}`;
-    name.textContent = data.name;
-    bio.textContent = data.bio;
-    userLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i>
-      ${data.location}`;
-    twitter.innerHTML = `<strong>Twitter: </strong>${
-      data.twitter_username === null
-        ? "User doesn't have twitter handle"
-        : data.twitter_username
-    }`;
+    loader2.style.display = "block";
+    const data = await fetchData(username);
+    loader2.style.display = "none";
+    if (data.id) {
+      getRepositories();
+      container.classList.remove("disable");
+      profilePic.src = data.avatar_url;
+      repoLink.href = data.html_url;
+      repoLink.innerHTML = `<span>
+        <i class="fa-solid fa-link"></i>
+      </span>
+      ${data.html_url}`;
+      name.textContent = data.name;
+      bio.textContent = data.bio;
+      userLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i>
+        ${data.location}`;
+      twitter.innerHTML = `<strong>Twitter: </strong>${
+        data.twitter_username === null
+          ? "User doesn't have twitter handle"
+          : data.twitter_username
+      }`;
+    } else {
+      alert(`user name ${username.value} is not exist!`);
+    }
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
@@ -57,20 +71,17 @@ function getRepositories() {
   const username = document.getElementById("username").value;
   const repositoriesContainer = document.getElementById("repositories");
   const loader = document.getElementById("loader");
-
   repositoriesContainer.innerHTML = "";
   loader.style.display = "block";
 
   fetch(
-    `${apiUrl}/users/${username}/repos?per_page=${repositoriesPerPage}&page=${currentPage}`
+    `${apiUrl}/users/${username}/repos?per_page=${pagesCount.repositoriesPerPage}&page=${pagesCount.currentPage}`
   )
     .then((response) => {
       const linkHeader = response.headers.get("Link");
-      console.log("linkheader", linkHeader);
       if (linkHeader) {
         const links = parseLinkHeader(linkHeader);
-        console.log("links", links);
-        lastPage = links.last ? links.last : links.prev + 1;
+        pagesCount.lastPage = links.last ? links.last : links.prev + 1;
       }
       return { repositories: response.json() };
     })
@@ -113,51 +124,50 @@ function getRepositories() {
 function displayPagination() {
   const paginationContainer = document.getElementById("pagination");
   paginationContainer.innerHTML = "";
-
   const prevButton = document.createElement("button");
+  prevButton.classList.add("prev-btn");
   prevButton.textContent = "Prev";
   prevButton.onclick = () => {
-    if (currentPage > 1) {
-      currentPage--;
+    if (pagesCount.currentPage > 1) {
+      pagesCount.currentPage--;
       getRepositories();
     }
   };
   paginationContainer.appendChild(prevButton);
 
   // Display dynamic range of pages
-  const startPage = Math.max(1, currentPage - 3);
-  const endPage = Math.min(lastPage, currentPage + 3);
-
-  console.log("start, end", startPage, endPage);
+  const startPage = Math.max(1, pagesCount.currentPage - 3);
+  const endPage = Math.min(pagesCount.lastPage, pagesCount.currentPage + 3);
 
   for (let i = startPage; i <= endPage; i++) {
     const button = document.createElement("button");
     button.textContent = i;
     button.onclick = () => {
-      currentPage = i;
+      pagesCount.currentPage = i;
       getRepositories();
     };
-    if (i === currentPage) {
+    if (i === pagesCount.currentPage) {
       button.classList.add("active");
     }
     paginationContainer.appendChild(button);
   }
 
   const nextButton = document.createElement("button");
+  nextButton.classList.add("next-btn");
   nextButton.textContent = "Next";
   nextButton.onclick = () => {
-    if (currentPage < lastPage) {
-      currentPage++;
+    if (pagesCount.currentPage < pagesCount.lastPage) {
+      pagesCount.currentPage++;
       getRepositories();
     }
   };
   paginationContainer.appendChild(nextButton);
 
   // Disable Prev button on the first page
-  prevButton.disabled = currentPage === 1;
+  prevButton.disabled = pagesCount.currentPage === 1;
 
   // Disable Next button on the last page
-  nextButton.disabled = currentPage === lastPage;
+  nextButton.disabled = pagesCount.currentPage === pagesCount.lastPage;
 }
 
 // Function to parse the Link header
