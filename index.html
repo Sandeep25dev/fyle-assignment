@@ -14,7 +14,7 @@
     <main>
       <form class="input-field user-search-section">
         <input
-          type="text"
+          type="username"
           class="input"
           id="username"
           placeholder="Enter github username"
@@ -59,9 +59,8 @@
           <button class="search-btn repo-search">Search</button>
         </form>
 
-        <div class="repos-section">
-          <div id="loader">Loading...</div>
-        </div>
+        <div id="loader">Loading...</div>
+        <div class="repos-section" id="repositories"></div>
       </div>
       <div id="pagination" class="pagination"></div>
     </main>
